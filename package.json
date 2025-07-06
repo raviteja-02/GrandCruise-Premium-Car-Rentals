@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@types/react-datepicker": "^7.0.0",
+    "framer-motion": "^12.18.1",
+    "react-datepicker": "^8.3.0"
+  }
+}
