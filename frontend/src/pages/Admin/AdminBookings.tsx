@@ -63,7 +63,7 @@ export default function AdminBookings() {
 
       return { previousBookings };
     },
-    onError: (err: any, variables, context) => {
+    onError: (err: any, _variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousBookings) {
         queryClient.setQueryData(['admin-bookings'], context.previousBookings);
@@ -110,7 +110,7 @@ export default function AdminBookings() {
 
       return { previousBookings };
     },
-    onError: (err: any, variables, context) => {
+    onError: (err: any, _variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousBookings) {
         queryClient.setQueryData(['admin-bookings'], context.previousBookings);

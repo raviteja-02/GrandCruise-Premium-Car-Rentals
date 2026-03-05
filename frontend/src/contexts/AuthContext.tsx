@@ -99,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (data: RegisterData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/users/`, data)
+      await axios.post(`${API_BASE_URL}/users/`, data)
       await login(data.username, data.password)
     } catch (error: any) {
       console.error('Registration error:', error.response?.data)

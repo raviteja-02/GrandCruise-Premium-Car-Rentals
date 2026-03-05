@@ -3,8 +3,14 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { useMaintenance } from '../contexts/MaintenanceContext'
 import {
-  Users, Fuel, Settings, Tag, CheckCircle, Star, Loader2
-} from 'lucide-react'
+  UserGroupIcon as Users,
+  FireIcon as Fuel,
+  Cog6ToothIcon as Settings,
+  TagIcon as Tag,
+  CheckCircleIcon as CheckCircle,
+  StarIcon as Star,
+  ArrowPathIcon as Loader2,
+} from '@heroicons/react/24/outline'
 import { API_BASE_URL } from '../components/hooks/config'
 import { useState, useEffect } from 'react'
 
