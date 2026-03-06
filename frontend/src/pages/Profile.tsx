@@ -47,10 +47,7 @@ export default function Profile() {
   })
 
   const updateMutation = useMutation({
-    mutationFn: async (data: ProfileForm) => {
-      const response = await axios.patch('/api/users/me/', data)
-      return response.data
-    },
+    mutationFn: async (data: ProfileForm) => updateProfile(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user'] })
       setSuccess('Profile updated successfully')

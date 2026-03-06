@@ -119,7 +119,7 @@ export default function Bookings() {
 
       return { previousBookings };
     },
-    onError: (err, bookingId, context) => {
+    onError: (_err, _bookingId, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousBookings) {
         queryClient.setQueryData(['bookings'], context.previousBookings);
