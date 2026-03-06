@@ -11,9 +11,11 @@ from .permissions import IsAdminOrReadOnly, IsOwnerOrAdmin
 
 class BookingViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSerializer
-    permission_classes = [IsOwnerOrAdmin]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Booking.objects.none()
         if self.request.user.is_staff:
             return Booking.objects.all().select_related('car', 'user')
         return Booking.objects.filter(user=self.request.user).select_related('car', 'user')
