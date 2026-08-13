@@ -9,7 +9,7 @@
       "destination": "https://your-django-backend.herokuapp.com/media/:path*"
     },
     {
-      "source": "/((?!api|media).*)/?",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
