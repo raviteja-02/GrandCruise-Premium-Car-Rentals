@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: car-booking-backend
+    runtime: python
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate"
+    startCommand: "gunicorn car_booking.wsgi:application"
+    envVars:
+      - key: USE_SQLITE
+        value: "True"
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://frontend-lime-theta-qt0cacl2sy.vercel.app"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://frontend-lime-theta-qt0cacl2sy.vercel.app"
