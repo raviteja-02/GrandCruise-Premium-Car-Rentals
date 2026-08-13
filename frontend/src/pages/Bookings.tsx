@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useAuth } from '../contexts/AuthContext'
+import { API_BASE_URL } from '../components/hooks/config'
 import { 
   CalendarIcon, 
   XMarkIcon, 
@@ -73,7 +74,7 @@ export default function Bookings() {
     queryFn: async () => {
       try {
         // No need to get token from localStorage here, AuthContext sets axios defaults
-        const response = await axios.get('http://localhost:8000/api/bookings/my_bookings/');
+        const response = await axios.get(`${API_BASE_URL}/bookings/my_bookings/`);
         return response.data;
       } catch (error) {
         console.error('Error fetching bookings:', error);
@@ -90,7 +91,7 @@ export default function Bookings() {
       try {
         // No need to get token from localStorage here, AuthContext sets axios defaults
         const response = await axios.patch(
-          `http://localhost:8000/api/bookings/${bookingId}/`,
+          `${API_BASE_URL}/bookings/${bookingId}/`,
           { status: 'cancelled' },
         );
         return response.data;
@@ -119,7 +120,7 @@ export default function Bookings() {
 
       return { previousBookings };
     },
-    onError: (err, bookingId, context) => {
+    onError: (_err, _bookingId, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousBookings) {
         queryClient.setQueryData(['bookings'], context.previousBookings);

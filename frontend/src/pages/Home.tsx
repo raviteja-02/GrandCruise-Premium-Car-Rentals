@@ -80,7 +80,7 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center opacity-20 blur-sm"
           style={{ backgroundImage: "url('/images/car-3d.png')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-900/30 to-black z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-teal-950/20 to-black z-10" />
         <div className="absolute inset-0 z-10 opacity-10">
           {[...Array(20)].map((_, i) => (
             <motion.div
@@ -103,7 +103,7 @@ export default function Home() {
           >
             <h1 className="text-6xl md:text-7xl font-playfair tracking-tight mb-2">
               Premium Car <br />
-              <span className="text-purple-400">Rental</span>
+              <span className="text-accent">Rental</span>
             </h1>
             <h2 className="text-3xl md:text-4xl font-playfair font-medium text-white/90 mt-4">
               Your Journey Begins Here

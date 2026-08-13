@@ -27,7 +27,7 @@ interface Booking {
 
 export default function Profile() {
   const navigate = useNavigate()
-  const { user, updateProfile } = useAuth()
+  const { user } = useAuth()
   const queryClient = useQueryClient()
   const [form, setForm] = useState<ProfileForm>({
     first_name: user?.first_name || '',

@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
-
-const API_BASE_URL = 'http://127.0.0.1:8000/api'
+import { API_BASE_URL } from '../components/hooks/config'
 
 interface User {
   id: number
@@ -99,7 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (data: RegisterData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/users/`, data)
+      await axios.post(`${API_BASE_URL}/users/`, data)
       await login(data.username, data.password)
     } catch (error: any) {
       console.error('Registration error:', error.response?.data)

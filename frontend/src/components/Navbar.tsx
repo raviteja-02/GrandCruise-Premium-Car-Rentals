@@ -54,7 +54,7 @@ export default function Navbar() {
                     {user?.is_staff && (
                       <Link
                         to="/admin"
-                        className="text-neutral hover:bg-accent hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        className="text-xl hover:bg-accent hover:text-white rounded-md px-3 py-2 text-sm font-playfair text-white"
                       >
                         Admin
                       </Link>

@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://your-django-backend.herokuapp.com/api/:path*"
+    },
+    {
+      "source": "/media/:path*",
+      "destination": "https://your-django-backend.herokuapp.com/media/:path*"
+    },
+    {
+      "source": "/((?!api|media).*)/?",
+      "destination": "/index.html"
+    }
+  ]
+}

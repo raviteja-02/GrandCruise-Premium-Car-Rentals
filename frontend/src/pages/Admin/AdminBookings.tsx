@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
 import { CalendarIcon, CheckIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { API_BASE_URL } from '../../components/hooks/config'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'react-hot-toast'
 
@@ -27,7 +28,7 @@ export default function AdminBookings() {
     queryKey: ['admin-bookings'],
     queryFn: async () => {
       // No need to get token from localStorage here, AuthContext sets axios defaults
-      const response = await axios.get('http://localhost:8000/api/bookings/');
+      const response = await axios.get(`${API_BASE_URL}/bookings/`);
       return response.data;
     },
     enabled: !!user?.is_staff && !authLoading,
@@ -39,7 +40,7 @@ export default function AdminBookings() {
     mutationFn: async ({ bookingId, status }: { bookingId: number; status: 'pending' | 'confirmed' | 'cancelled' | 'completed' }) => {
       // No need to get token from localStorage here, AuthContext sets axios defaults
       return axios.patch(
-        `http://localhost:8000/api/bookings/${bookingId}/update_status/`,
+        `${API_BASE_URL}/bookings/${bookingId}/update_status/`,
         { status },
       );
     },
@@ -63,7 +64,7 @@ export default function AdminBookings() {
 
       return { previousBookings };
     },
-    onError: (err: any, variables, context) => {
+    onError: (err: any, _variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousBookings) {
         queryClient.setQueryData(['admin-bookings'], context.previousBookings);
@@ -91,7 +92,7 @@ export default function AdminBookings() {
     mutationFn: async (bookingId: number) => {
       // No need to get token from localStorage here, AuthContext sets axios defaults
       return axios.delete(
-        `http://localhost:8000/api/bookings/${bookingId}/`,
+        `${API_BASE_URL}/bookings/${bookingId}/`,
       );
     },
     onMutate: async (bookingId) => {
@@ -110,7 +111,7 @@ export default function AdminBookings() {
 
       return { previousBookings };
     },
-    onError: (err: any, variables, context) => {
+    onError: (err: any, _variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousBookings) {
         queryClient.setQueryData(['admin-bookings'], context.previousBookings);
