@@ -6,15 +6,15 @@
   import 'react-datepicker/dist/react-datepicker.css';
   import { useAuth } from '../contexts/AuthContext';
   import {
-    CheckCircle,
-    XCircle,
-    Loader2,
-    Car as CarIcon,
-    Users,
-    Fuel,
-    Settings,
-    Tag
-  } from 'lucide-react';
+    CheckCircleIcon,
+    XCircleIcon,
+    ArrowPathIcon,
+    TruckIcon as CarIcon,
+    UserGroupIcon as Users,
+    FireIcon as Fuel,
+    Cog6ToothIcon as Settings,
+    TagIcon as Tag
+  } from '@heroicons/react/24/outline';
 
   interface CarDetailsData {
     price_per_day: number;
@@ -143,13 +143,13 @@
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
                 <div className="flex items-center bg-red-50 p-3 rounded-lg">
-                  <XCircle className="h-5 w-5 text-red-500 mr-2" />
+                  <XCircleIcon className="h-5 w-5 text-red-500 mr-2" />
                   <span className="text-red-600">{error}</span>
                 </div>
               )}
               {success && (
                 <div className="flex items-center bg-green-50 p-3 rounded-lg">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                  <CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />
                   <span className="text-green-700">Booked! Redirecting…</span>
                 </div>
               )}
@@ -166,8 +166,8 @@
                 className="w-full bg-primary text-white py-3 rounded-lg flex items-center justify-center disabled:opacity-50"
               >
                 {bookingMutation.isPending ? (
-                  <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                ) : success ? <CheckCircle className="h-5 w-5 mr-2" /> : <CarIcon className="h-5 w-5 mr-2" />}
+                  <ArrowPathIcon className="h-5 w-5 animate-spin mr-2" />
+                ) : success ? <CheckCircleIcon className="h-5 w-5 mr-2" /> : <CarIcon className="h-5 w-5 mr-2" />}
                 {bookingMutation.isPending ? 'Processing...' : success ? 'Booked!' : 'Book Now'}
               </button>
               <p className="text-xs text-center text-gray-500 mt-2">
@@ -192,9 +192,9 @@
             <div className="p-6 bg-gray-50 rounded-xl">
               <h3 className="font-medium mb-4">What's included</h3>
               <ul className="space-y-2">
-                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-500 mr-2" />Free cancellation</li>
-                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-500 mr-2" />Full insurance</li>
-                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-green-500 mr-2" />24/7 assistance</li>
+                <li className="flex items-center"><CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />Free cancellation</li>
+                <li className="flex items-center"><CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />Full insurance</li>
+                <li className="flex items-center"><CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />24/7 assistance</li>
               </ul>
             </div>
           </div>
