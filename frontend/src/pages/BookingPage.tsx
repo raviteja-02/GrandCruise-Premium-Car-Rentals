@@ -188,18 +188,20 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
-      {/* Calendar Overrides styling */}
+      {/* Calendar Overrides styling for Premium Light theme */}
       <style>{`
         .react-calendar {
           width: 100% !important;
+          background: white !important;
           border: 1px solid #f3f4f6 !important;
           border-radius: 1.5rem !important;
           font-family: inherit !important;
           padding: 1.25rem;
+          color: #374151 !important;
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .react-calendar__navigation button {
-          color: #1f2937;
+          color: #1f2937 !important;
           min-width: 44px;
           background: none;
           font-size: 1.1rem;
@@ -210,14 +212,14 @@ export default function BookingPage() {
         }
         .react-calendar__navigation button:enabled:hover,
         .react-calendar__navigation button:enabled:focus {
-          background-color: #f3f4f6;
+          background-color: #f3f4f6 !important;
         }
         .react-calendar__month-view__weekdays {
           text-align: center;
           text-transform: uppercase;
           font-weight: 750;
           font-size: 0.75rem;
-          color: #9ca3af;
+          color: #9ca3af !important;
           padding-bottom: 0.5rem;
         }
         .react-calendar__month-view__weekdays__weekday abbr {
@@ -231,13 +233,13 @@ export default function BookingPage() {
           line-height: 16px;
           font-weight: 600;
           font-size: 0.875rem;
-          color: #374151;
+          color: #374151 !important;
           border-radius: 0.75rem;
           transition: all 0.15s;
         }
         .react-calendar__tile:enabled:hover,
         .react-calendar__tile:enabled:focus {
-          background-color: #f3f4f6;
+          background-color: #f3f4f6 !important;
         }
         .react-calendar__tile--now {
           background: #fef3c7 !important;
@@ -314,21 +316,21 @@ export default function BookingPage() {
             </div>
 
             {/* Legend for Calendar */}
-            <div className="flex justify-center gap-6 mb-8 text-xs font-semibold text-gray-500">
+            <div className="flex justify-center flex-wrap gap-6 mb-8 text-xs font-semibold text-gray-500">
               <div className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded bg-gray-100 border border-gray-200 inline-block"></span>
+                <span className="w-3.5 h-3.5 rounded bg-white border border-gray-200 inline-block"></span>
                 <span>Available</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded bg-amber-100 border border-amber-300 inline-block"></span>
+                <span className="w-3.5 h-3.5 rounded bg-amber-50 border border-amber-200 inline-block"></span>
                 <span>Today</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded bg-gray-900 border border-gray-900 inline-block"></span>
+                <span className="w-3.5 h-3.5 rounded bg-gray-900 border border-gray-950 inline-block"></span>
                 <span>Selected</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded bg-red-100 border border-red-200 line-through inline-block"></span>
+                <span className="w-3.5 h-3.5 rounded bg-red-50 border border-red-200 line-through inline-block"></span>
                 <span>Booked / Unavailable</span>
               </div>
             </div>
@@ -336,13 +338,13 @@ export default function BookingPage() {
             {/* Custom Selected Dates Display */}
             <div className="grid grid-cols-2 gap-4 mb-8 bg-gray-50 p-4 rounded-xl border border-gray-100">
               <div className="text-center p-3 bg-white rounded-lg shadow-sm border border-gray-100">
-                <span className="block text-xs uppercase font-semibold text-gray-400">Pick-up Date</span>
+                <span className="block text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-0.5">Pick-up Date</span>
                 <span className="text-sm font-bold text-gray-800">
                   {dates.startDate ? dates.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Not Selected'}
                 </span>
               </div>
               <div className="text-center p-3 bg-white rounded-lg shadow-sm border border-gray-100">
-                <span className="block text-xs uppercase font-semibold text-gray-400">Drop-off Date</span>
+                <span className="block text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-0.5">Drop-off Date</span>
                 <span className="text-sm font-bold text-gray-800">
                   {dates.endDate ? dates.endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Not Selected'}
                 </span>

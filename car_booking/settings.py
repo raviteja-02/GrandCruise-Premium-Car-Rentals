@@ -93,8 +93,8 @@ try:
 except ImportError:
     HAS_MYSQL = False
 
-# Fallback to SQLite in environments where MySQL is not configured or available
-if os.getenv('USE_SQLITE') == 'True' or not HAS_MYSQL or not os.getenv('DB_NAME'):
+# Use SQLite3 locally by default, switch to TiDB/MySQL only when running in production (Render)
+if os.getenv('USE_SQLITE') == 'True' or not HAS_MYSQL or os.getenv('RENDER') != 'true':
     # Check if running on Render and a persistent disk (/data) is mounted
     from pathlib import Path
     db_path = BASE_DIR / 'db.sqlite3'
@@ -126,7 +126,11 @@ else:
             if env_ca_path and os.path.exists(env_ca_path):
                 db_options['ssl'] = {'ca': env_ca_path}
             else:
-                db_options['ssl'] = {}
+                try:
+                    import certifi
+                    db_options['ssl'] = {'ca': certifi.where()}
+                except ImportError:
+                    db_options['ssl'] = {}
     elif os.getenv('DB_SSL_REQUIRE') == 'True':
         db_options['ssl'] = {}
 
