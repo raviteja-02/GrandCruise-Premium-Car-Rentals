@@ -77,8 +77,5 @@ Thumbs.db
 package-lock.json
 frontend/package-lock.json
 
-# Hide Django management commands (custom scripts)
-cars/management/commands/ 
-
 # .bat files
 init_db.bat

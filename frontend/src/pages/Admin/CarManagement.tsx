@@ -60,7 +60,7 @@ export default function CarManagement() {
   const { data: cars, isLoading } = useQuery<Car[]>({
     queryKey: ['cars'],
     queryFn: async () => {
-      const response = await axios.get('/api/cars')
+      const response = await axios.get('/api/cars/')
       return response.data
     },
   })

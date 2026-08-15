@@ -43,7 +43,7 @@
     const { data: car } = useQuery<CarDetailsData>({
       queryKey: ['carDetails', id],
       queryFn: async () => {
-        const response = await axios.get(`/api/cars/${id}`);
+        const response = await axios.get(`/api/cars/${id}/`);
         return response.data;
       },
       enabled: !!id,
