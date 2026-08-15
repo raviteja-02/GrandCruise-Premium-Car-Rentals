@@ -74,8 +74,8 @@ class BookingSerializer(serializers.ModelSerializer):
             else:
                 raise serializers.ValidationError("User authentication required")
 
-            # Calculate total price
-            days = (validated_data['end_date'] - validated_data['start_date']).days + 1
+            # Calculate total price (non-inclusive range with minimum 1 day)
+            days = max(1, (validated_data['end_date'] - validated_data['start_date']).days)
             validated_data['total_price'] = days * validated_data['car'].price_per_day
 
             return super().create(validated_data)

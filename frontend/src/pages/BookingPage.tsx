@@ -110,9 +110,9 @@ export default function BookingPage() {
     });
   };
 
-  // Fixed Booking Days Calculation to align with Backend logic (inclusive start & end dates)
+  // Fixed Booking Days Calculation to use standard non-inclusive range (minimum 1 day)
   const days = dates.startDate && dates.endDate
-    ? Math.max(1, Math.ceil((dates.endDate.getTime() - dates.startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1)
+    ? Math.max(1, Math.round((dates.endDate.getTime() - dates.startDate.getTime()) / (1000 * 60 * 60 * 24)))
     : 0;
 
   const total = days && car ? days * car.price_per_day : 0;
