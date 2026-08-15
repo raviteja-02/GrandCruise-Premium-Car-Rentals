@@ -110,6 +110,10 @@ if os.getenv('USE_SQLITE') == 'True' or not HAS_MYSQL or not os.getenv('DB_NAME'
         }
     }
 else:
+    db_options = {}
+    if os.getenv('DB_SSL_REQUIRE') == 'True':
+        db_options['ssl'] = {}
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -118,6 +122,7 @@ else:
             'PASSWORD': os.getenv('DB_PASSWORD', ''),
             'HOST': os.getenv('DB_HOST', 'localhost'),
             'PORT': os.getenv('DB_PORT', '3306'),
+            'OPTIONS': db_options,
         }
     }
 
