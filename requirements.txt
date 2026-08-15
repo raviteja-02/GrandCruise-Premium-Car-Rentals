@@ -11,3 +11,4 @@ lxml
 selenium
 gunicorn
 whitenoise==6.6.0
+django-tidb~=5.0.0

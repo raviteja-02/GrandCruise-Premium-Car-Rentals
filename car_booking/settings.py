@@ -110,18 +110,34 @@ if os.getenv('USE_SQLITE') == 'True' or not HAS_MYSQL or not os.getenv('DB_NAME'
         }
     }
 else:
+    db_engine = 'django.db.backends.mysql'
     db_options = {}
-    if os.getenv('DB_SSL_REQUIRE') == 'True':
+
+    if os.getenv('DB_ENGINE') == 'django_tidb' or os.getenv('DB_HOST', '').endswith('tidbcloud.com'):
+        db_engine = 'django_tidb'
+        db_options['ssl_mode'] = 'VERIFY_IDENTITY'
+        
+        ca_path = '/etc/ssl/certs/ca-certificates.crt'
+        import os
+        if os.path.exists(ca_path):
+            db_options['ssl'] = {'ca': ca_path}
+        else:
+            env_ca_path = os.getenv('DB_CA_PATH')
+            if env_ca_path and os.path.exists(env_ca_path):
+                db_options['ssl'] = {'ca': env_ca_path}
+            else:
+                db_options['ssl'] = {}
+    elif os.getenv('DB_SSL_REQUIRE') == 'True':
         db_options['ssl'] = {}
 
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
+            'ENGINE': db_engine,
             'NAME': os.getenv('DB_NAME', 'car_booking'),
             'USER': os.getenv('DB_USER', 'root'),
             'PASSWORD': os.getenv('DB_PASSWORD', ''),
             'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '3306'),
+            'PORT': int(os.getenv('DB_PORT', '3306')),
             'OPTIONS': db_options,
         }
     }
