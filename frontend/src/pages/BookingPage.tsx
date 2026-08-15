@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import { useAuth } from '../contexts/AuthContext';
 import {
   CheckCircleIcon,
@@ -37,6 +37,11 @@ interface BookingDates {
   endDate: Date | null;
 }
 
+interface BlockedDateRange {
+  start_date: string;
+  end_date: string;
+}
+
 export default function BookingPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -50,6 +55,16 @@ export default function BookingPage() {
     queryKey: ['carDetails', id],
     queryFn: async () => {
       const response = await axios.get(`/api/cars/${id}/`);
+      return response.data;
+    },
+    enabled: !!id,
+  });
+
+  // Fetch blocked dates for this car
+  const { data: blockedDates } = useQuery<BlockedDateRange[]>({
+    queryKey: ['blockedDates', id],
+    queryFn: async () => {
+      const response = await axios.get(`/api/cars/${id}/blocked_dates/`);
       return response.data;
     },
     enabled: !!id,
@@ -86,23 +101,77 @@ export default function BookingPage() {
     }
   });
 
-  const handleDateChange = (range: [Date | null, Date | null]) => {
-    setDates({ startDate: range[0], endDate: range[1] });
+  // Handle calendar date range selection
+  const handleCalendarChange = (value: any) => {
+    if (Array.isArray(value)) {
+      setDates({ startDate: value[0], endDate: value[1] });
+    } else if (value instanceof Date) {
+      setDates({ startDate: value, endDate: null });
+    } else {
+      setDates({ startDate: null, endDate: null });
+    }
+  };
+
+  // Determine if a specific date tile should be disabled (blocked)
+  const isTileDisabled = ({ date, view }: { date: Date; view: string }) => {
+    if (view !== 'month') return false;
+
+    // 1. Disable dates in the past
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) return true;
+
+    // 2. Disable dates within booked/blocked ranges
+    if (blockedDates && blockedDates.length > 0) {
+      const checkTime = date.getTime();
+      return blockedDates.some(range => {
+        const start = new Date(range.start_date);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(range.end_date);
+        end.setHours(23, 59, 59, 999);
+        return checkTime >= start.getTime() && checkTime <= end.getTime();
+      });
+    }
+
+    return false;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    
     if (!dates.startDate || !dates.endDate) {
-      setError('Please select both pick-up and drop-off dates.');
+      setError('Please select a valid check-in and check-out date range on the calendar.');
       return;
     }
+
+    // Verify client-side that the selected range does not contain any blocked dates
+    if (blockedDates && blockedDates.length > 0) {
+      const startSec = dates.startDate.getTime();
+      const endSec = dates.endDate.getTime();
+      
+      const overlaps = blockedDates.some(range => {
+        const start = new Date(range.start_date);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(range.end_date);
+        end.setHours(23, 59, 59, 999);
+        
+        return startSec <= end.getTime() && endSec >= start.getTime();
+      });
+
+      if (overlaps) {
+        setError('The selected date range overlaps with an existing booking. Please pick another window.');
+        return;
+      }
+    }
+
     const fmt = (d: Date) => {
       const year = d.getFullYear();
       const month = (d.getMonth() + 1).toString().padStart(2, '0');
       const day = d.getDate().toString().padStart(2, '0');
       return `${year}-${month}-${day}`;
     };
+
     bookingMutation.mutate({
       car: Number(id),
       start_date: fmt(dates.startDate),
@@ -110,7 +179,7 @@ export default function BookingPage() {
     });
   };
 
-  // Fixed Booking Days Calculation to use standard non-inclusive range (minimum 1 day)
+  // Fixed Non-Inclusive Booking Days Calculation (minimum 1 day)
   const days = dates.startDate && dates.endDate
     ? Math.max(1, Math.round((dates.endDate.getTime() - dates.startDate.getTime()) / (1000 * 60 * 60 * 24)))
     : 0;
@@ -119,6 +188,92 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
+      {/* Calendar Overrides styling */}
+      <style>{`
+        .react-calendar {
+          width: 100% !important;
+          border: 1px solid #f3f4f6 !important;
+          border-radius: 1.5rem !important;
+          font-family: inherit !important;
+          padding: 1.25rem;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .react-calendar__navigation button {
+          color: #1f2937;
+          min-width: 44px;
+          background: none;
+          font-size: 1.1rem;
+          font-weight: 700;
+          margin-top: 8px;
+          border-radius: 0.5rem;
+          transition: all 0.2s;
+        }
+        .react-calendar__navigation button:enabled:hover,
+        .react-calendar__navigation button:enabled:focus {
+          background-color: #f3f4f6;
+        }
+        .react-calendar__month-view__weekdays {
+          text-align: center;
+          text-transform: uppercase;
+          font-weight: 750;
+          font-size: 0.75rem;
+          color: #9ca3af;
+          padding-bottom: 0.5rem;
+        }
+        .react-calendar__month-view__weekdays__weekday abbr {
+          text-decoration: none !important;
+        }
+        .react-calendar__tile {
+          max-width: 100%;
+          padding: 0.75rem 0.5rem;
+          background: none;
+          text-align: center;
+          line-height: 16px;
+          font-weight: 600;
+          font-size: 0.875rem;
+          color: #374151;
+          border-radius: 0.75rem;
+          transition: all 0.15s;
+        }
+        .react-calendar__tile:enabled:hover,
+        .react-calendar__tile:enabled:focus {
+          background-color: #f3f4f6;
+        }
+        .react-calendar__tile--now {
+          background: #fef3c7 !important;
+          color: #d97706 !important;
+          font-weight: 800;
+        }
+        .react-calendar__tile--active {
+          background: #111827 !important;
+          color: #f59e0b !important;
+          border-radius: 0.75rem;
+        }
+        .react-calendar__tile--range {
+          background: #1f2937 !important;
+          color: #ffffff !important;
+        }
+        .react-calendar__tile--rangeStart {
+          background: #111827 !important;
+          color: #f59e0b !important;
+          border-top-left-radius: 0.75rem;
+          border-bottom-left-radius: 0.75rem;
+        }
+        .react-calendar__tile--rangeEnd {
+          background: #111827 !important;
+          color: #f59e0b !important;
+          border-top-right-radius: 0.75rem;
+          border-bottom-right-radius: 0.75rem;
+        }
+        .react-calendar__tile:disabled {
+          background-color: #fee2e2 !important;
+          color: #ef4444 !important;
+          opacity: 0.6;
+          text-decoration: line-through;
+          cursor: not-allowed;
+        }
+      `}</style>
+
       <div className="max-w-6xl mx-auto">
         {/* Luxury Header */}
         <div className="text-center mb-12">
@@ -142,19 +297,40 @@ export default function BookingPage() {
               Select Booking Window
             </h2>
             
-            <div className="flex justify-center mb-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
-              <DatePicker
-                selected={dates.startDate}
-                onChange={handleDateChange}
-                startDate={dates.startDate}
-                endDate={dates.endDate}
-                selectsRange
-                inline
+            <div className="flex justify-center mb-6">
+              <Calendar
+                onChange={handleCalendarChange}
+                selectRange={true}
                 minDate={new Date()}
-                dateFormat="yyyy-MM-dd"
-                showPopperArrow={false}
-                calendarClassName="border-0 shadow-sm rounded-xl font-sans"
+                tileDisabled={isTileDisabled}
+                value={
+                  dates.startDate && dates.endDate
+                    ? [dates.startDate, dates.endDate]
+                    : dates.startDate
+                    ? dates.startDate
+                    : undefined
+                }
               />
+            </div>
+
+            {/* Legend for Calendar */}
+            <div className="flex justify-center gap-6 mb-8 text-xs font-semibold text-gray-500">
+              <div className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 rounded bg-gray-100 border border-gray-200 inline-block"></span>
+                <span>Available</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 rounded bg-amber-100 border border-amber-300 inline-block"></span>
+                <span>Today</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 rounded bg-gray-900 border border-gray-900 inline-block"></span>
+                <span>Selected</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 rounded bg-red-100 border border-red-200 line-through inline-block"></span>
+                <span>Booked / Unavailable</span>
+              </div>
             </div>
 
             {/* Custom Selected Dates Display */}

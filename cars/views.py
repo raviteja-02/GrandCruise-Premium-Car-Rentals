@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, filters
+from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Car
 from .serializers import CarSerializer
@@ -27,9 +28,27 @@ class CarViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']  # Default ordering
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'blocked_dates']:
             return [permissions.AllowAny()]
         return [permissions.IsAdminUser()]
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
+    def blocked_dates(self, request, pk=None):
+        car = self.get_object()
+        from bookings.models import Booking
+        active_bookings = Booking.objects.filter(
+            car=car,
+            status__in=['pending', 'confirmed']
+        ).values('start_date', 'end_date')
+        
+        formatted_dates = []
+        for b in active_bookings:
+            formatted_dates.append({
+                'start_date': b['start_date'].strftime('%Y-%m-%d'),
+                'end_date': b['end_date'].strftime('%Y-%m-%d')
+            })
+            
+        return Response(formatted_dates)
 
 class CarGalleryViewSet(viewsets.ModelViewSet):
     """
