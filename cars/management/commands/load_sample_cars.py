@@ -561,8 +561,7 @@ class Command(BaseCommand):
             'honda cr-v': [
                 'https://stimg.cardekho.com/images/carexteriorimages/630x420/Honda/CR-V/7739/1585800250804/front-left-side-47.jpg',
                 'https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/CR-V/7739/1585800250804/front-left-side-47.jpg',
-                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/CR-V/7739/1585800250804/front-view-118.jpg',
-                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/CR-V/7739/1585800250804/rear-view-119.jpg'
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/CR-V/7739/1585800250804/front-view-118.jpg'
             ],
             'tesla model 3': [
                 'https://stimg.cardekho.com/images/carexteriorimages/630x420/Tesla/Model-3/5251/1693556345148/front-left-side-47.jpg',
