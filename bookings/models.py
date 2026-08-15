@@ -29,7 +29,9 @@ class Booking(models.Model):
 
     def can_be_cancelled(self):
         """Check if the booking can be cancelled."""
-        return self.status in ['pending', 'confirmed'] and self.start_date > timezone.now().date()
+        if self.status == 'pending':
+            return True
+        return self.status == 'confirmed' and self.start_date > timezone.now().date()
 
     def save(self, *args, **kwargs):
         if self.status in ['cancelled', 'completed']:

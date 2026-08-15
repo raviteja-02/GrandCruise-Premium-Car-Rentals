@@ -4,7 +4,7 @@ from cars.serializers import CarSerializer
 from users.serializers import UserSerializer
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class BookingSerializer(serializers.ModelSerializer):
     car_details = CarSerializer(source='car', read_only=True)
@@ -40,8 +40,8 @@ class BookingSerializer(serializers.ModelSerializer):
         try:
             if isinstance(value, str):
                 value = datetime.strptime(value, '%Y-%m-%d').date()
-            if value < timezone.now().date():
-                raise serializers.ValidationError("Start date must be in the future")
+            if value < (timezone.now().date() - timedelta(days=1)):
+                raise serializers.ValidationError("Start date must be today or in the future")
             return value
         except (TypeError, ValueError) as e:
             raise serializers.ValidationError("Invalid start date format. Use YYYY-MM-DD")

@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
+from datetime import timedelta
 from .models import Booking
 from .serializers import BookingSerializer
 from .permissions import IsAdminOrReadOnly, IsOwnerOrAdmin
@@ -28,26 +29,18 @@ class BookingViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         car = serializer.validated_data['car']
         if not car.is_available:
-            return Response(
-                {'error': 'Car is not available for the selected dates'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            raise serializers.ValidationError('Car is currently not active in the fleet')
         
         # Check for overlapping bookings
         start_date = serializer.validated_data['start_date']
         end_date = serializer.validated_data['end_date']
         
-        if start_date < timezone.now().date():
-            return Response(
-                {'error': 'Start date cannot be in the past'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        # Allow today's booking in any timezone
+        if start_date < (timezone.now().date() - timedelta(days=1)):
+            raise serializers.ValidationError('Start date cannot be in the past')
         
         if end_date < start_date:
-            return Response(
-                {'error': 'End date cannot be before start date'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            raise serializers.ValidationError('End date cannot be before start date')
         
         overlapping_bookings = Booking.objects.filter(
             car=car,
@@ -57,20 +50,13 @@ class BookingViewSet(viewsets.ModelViewSet):
         )
         
         if overlapping_bookings.exists():
-            return Response(
-                {'error': 'Car is already booked for the selected dates'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            raise serializers.ValidationError('Car is already booked for the selected dates')
         
-        # Create booking
+        # Create booking (we keep car.is_available as True so other dates remain bookable)
         booking = serializer.save(
             user=self.request.user,
             status='pending'
         )
-        
-        # Update car availability
-        car.is_available = False
-        car.save()
         
         return booking
 
