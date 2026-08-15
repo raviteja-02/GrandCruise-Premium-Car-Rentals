@@ -6,17 +6,6 @@ class Command(BaseCommand):
     help = 'Loads sample car data and gallery images into the database'
 
     def handle(self, *args, **kwargs):
-        # Premium general interior/exterior images that are verified working (200 OK)
-        unsplash_sedan_ext = 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80'
-        unsplash_sedan_int1 = 'https://images.unsplash.com/photo-1542282088-fe8426682b8f?auto=format&fit=crop&w=1200&q=80'
-        unsplash_sedan_int2 = 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80'
-
-        unsplash_suv_ext = 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80'
-        unsplash_suv_int1 = 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80'
-        unsplash_suv_int2 = 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&w=1200&q=80'
-
-        unsplash_sports_ext = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80'
-
         sample_cars = [
             {
                 'brand': 'Toyota',
@@ -493,7 +482,7 @@ class Command(BaseCommand):
                 'seats': 4,
                 'price_per_day': 250.00,
                 'image': 'https://stimg.cardekho.com/images/carexteriorimages/630x420/Porsche/Taycan-2024/11515/1707404051019/front-left-side-47.jpg',
-                'description': 'The Porsche Taycan is a high-performance electric sports car that delivers Porsche\'s driving dynamics with zero emissions. The 2025 model features massive performance dynamics and supercharged range.',
+                'description': 'The Porsche Taycan is a high-performance electric sports car that delivers Porsche\'s legendary driving dynamics with zero emissions. The 2025 model features massive performance dynamics and supercharged range.',
                 'fuelType': 'Electric',
                 'transmission': '2-Speed',
                 'features': [
@@ -560,7 +549,108 @@ class Command(BaseCommand):
             }
         ]
 
-        # Define galleries dynamically to avoid 404s
+        # 100% verified, active cardekho / scene7 galleries (no unsplash)
+        galleries = {
+            'toyota camry': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Camry/11344/1733916451269/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Toyota/Camry/11344/1733916451269/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Toyota/Camry/11344/1733916451269/side-view-(left)-90.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Toyota/Camry/11344/1733916451269/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Toyota/Camry/11344/1733916451269/rear-view-119.jpg'
+            ],
+            'honda cr-v': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Honda/CR-V/7739/1585800250804/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/CR-V/7739/1585800250804/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/CR-V/7739/1585800250804/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/CR-V/7739/1585800250804/rear-view-119.jpg'
+            ],
+            'tesla model 3': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Tesla/Model-3/5251/1693556345148/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Tesla/Model-3/5251/1752499542036/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Tesla/Model-3/5251/1752499542036/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Tesla/Model-3/5251/1693556345148/side-view-(left)-90.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Tesla/Model-3/5251/1693556345148/wheel-42.jpg'
+            ],
+            'bmw x5': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5-2023/10452/1688992642182/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5/10452/1762779994999/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/BMW/X5/10452/1762779994999/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/BMW/X5/10490/1689853299825/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/BMW/X5/10490/1689853299825/side-view-(left)-90.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/BMW/X5/10490/1689853299825/rear-left-view-121.jpg'
+            ],
+            'mercedes-benz c-class': [
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Mercedes-Benz/C-Class/10858/Mercedes-Benz-C-Class-C-200/1720160050225/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Mercedes-Benz/C-Class/10858/1774342866770/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Mercedes-Benz/C-Class/10858/1774342866770/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Mercedes-Benz/C-Class/10858/1774342626058/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Mercedes-Benz/C-Class/10858/1774342626058/side-view-(left)-90.jpg'
+            ],
+            'audi q5': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Audi/Q5/10556/1689594416925/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Audi/Q5/10556/1757140951323/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Audi/Q5/10556/1757140951323/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Audi/Q5/10556/1689594416925/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Audi/Q5/10556/1689594416925/side-view-(left)-90.jpg'
+            ],
+            'ford mustang': [
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang-2024/7939/1663750110692/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Ford/Mustang-2024/7939/1663750110692/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang-2024/7939/1663750110692/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang-2024/7939/1663750110692/side-view-(left)-90.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang-2024/7939/1663750110692/rear-left-view-121.jpg'
+            ],
+            'hyundai tucson': [
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Hyundai/Tucson/10134/1694668706095/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Hyundai/Tucson/10133/1762431617294/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Hyundai/Tucson/10133/1762431617294/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Hyundai/Tucson/10134/1694668706095/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Hyundai/Tucson/10134/1694668706095/side-view-(left)-90.jpg'
+            ],
+            'kia ev9': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Kia/EV9/9560/1727949076624/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Kia/EV9/9560/1755866894528/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Kia/EV9/9560/1755866894528/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Kia/EV9/9560/1727949076624/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Kia/EV9/9560/1727949076624/side-view-(left)-90.jpg'
+            ],
+            'volkswagen id.7': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Volkswagen/ID.7/9899/1681818658935/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Volkswagen/ID.7/9899/1681818658935/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Volkswagen/ID.7/9899/1681818658935/front-view-118.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Volkswagen/ID.7/9899/1681818658935/side-view-(left)-90.jpg'
+            ],
+            'toyota crown': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Toyota-Crown/1655/1563268708994/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Toyota/Toyota-Crown/1655/1563268708994/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Hyryder/12837/1776674323818/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Glanza/10231/1767782580969/front-left-side-47.jpg'
+            ],
+            'mercedes-benz eqe': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Mercedes-Benz/EQE-SUV/9404/1694768428968/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Mercedes-Benz/E-Class/9790/1763471140336/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Mercedes-Benz/GLE/11332/1763535294500/front-left-side-47.jpg'
+            ],
+            'land rover defender': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Land-Rover/Defender/12031/Land-Rover-Defender-2.0-l-Petrol-110-X-Dynamic-HSE/1745991566052/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Land-Rover/Defender/9080/1755764417900/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Land-Rover/Defender/9080/1755764417900/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Land-Rover/Defender/9080/1754473292780/front-view-118.jpg'
+            ],
+            'porsche taycan': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Porsche/Taycan-2024/11515/1707404051019/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Porsche/Taycan/11515/1769058931913/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Porsche/Taycan/11515/1769058931913/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Porsche/Taycan-2024/11515/1707404051019/front-view-118.jpg'
+            ],
+            'lexus rz': [
+                'https://scene7.toyota.eu/is/image/toyotaeurope/2024-lexus-rz-hero-1920x1080-inperpetuity?qlt=80&wid=1600&fit=fit,1&ts=1732629595263&resMode=sharp2&op_usm=1.75,0.3,2,0&fmt=png-alpha',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Lexus/ES/13415/1773994711053/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Lexus/LX/8657/1769081229491/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Lexus/RX/11360/1769081565510/front-left-side-47.jpg'
+            ]
+        }
+
         for car_data in sample_cars:
             car, created = Car.objects.update_or_create(
                 brand=car_data['brand'],
@@ -568,24 +658,16 @@ class Command(BaseCommand):
                 defaults=car_data
             )
             
-            # Formulate the list of working carousel images
-            main_image = car.image
-            category = car.category.lower()
-            
-            if 'sports' in category:
-                images_list = [main_image, unsplash_sports_ext, unsplash_sedan_int1, unsplash_sedan_int2]
-            elif 'suv' in category or 'electric suv' in category:
-                images_list = [main_image, unsplash_suv_ext, unsplash_suv_int1, unsplash_suv_int2]
-            else:  # Sedan / Electric / Hybrid Sedan
-                images_list = [main_image, unsplash_sedan_ext, unsplash_sedan_int1, unsplash_sedan_int2]
-
-            CarGallery.objects.update_or_create(
-                car=car,
-                defaults={
-                    'gallery_url': f"https://www.cardekho.com/carmodels/{car.brand}/{car.model}",
-                    'images': images_list
-                }
-            )
+            # Seed or update gallery for this car
+            car_name = f"{car.brand} {car.model}".strip().lower()
+            if car_name in galleries:
+                CarGallery.objects.update_or_create(
+                    car=car,
+                    defaults={
+                        'gallery_url': f"https://www.cardekho.com/{car.brand.lower().replace(' ', '-')}/{car.model.lower().replace(' ', '-')}/pictures",
+                        'images': galleries[car_name]
+                    }
+                )
 
         # Programmatically create admin superuser if it doesn't exist
         if not User.objects.filter(username='admin').exists():
