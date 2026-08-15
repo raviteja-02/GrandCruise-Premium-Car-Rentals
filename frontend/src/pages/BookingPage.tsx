@@ -184,7 +184,8 @@ export default function BookingPage() {
     ? Math.max(1, Math.round((dates.endDate.getTime() - dates.startDate.getTime()) / (1000 * 60 * 60 * 24)))
     : 0;
 
-  const total = days && car ? days * car.price_per_day : 0;
+  const pricePerDay = car ? Number(car.price_per_day) : 0;
+  const total = days ? days * pricePerDay : 0;
 
   return (
     <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
@@ -374,7 +375,7 @@ export default function BookingPage() {
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Daily Rate</span>
-                    <span className="font-bold text-gray-900">${car.price_per_day.toFixed(2)}</span>
+                    <span className="font-bold text-gray-900">${pricePerDay.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between pt-4 border-t border-gray-200 font-bold text-lg text-gray-900">
                     <span>Estimated Total</span>
