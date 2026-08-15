@@ -1,12 +1,13 @@
 {
+  "trailingSlash": true,
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://grandcruise-backend.onrender.com/api/:path*"
+      "source": "/api/(.*)",
+      "destination": "https://grandcruise-backend.onrender.com/api/$1"
     },
     {
-      "source": "/media/:path*",
-      "destination": "https://grandcruise-backend.onrender.com/media/:path*"
+      "source": "/media/(.*)",
+      "destination": "https://grandcruise-backend.onrender.com/media/$1"
     },
     {
       "source": "/(.*)",
