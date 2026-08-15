@@ -9,4 +9,5 @@ requests
 beautifulsoup4
 lxml
 selenium
-gunicorn 
+gunicorn
+whitenoise==6.6.0

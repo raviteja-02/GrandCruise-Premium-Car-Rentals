@@ -1,0 +1,138 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | GrandCruise Executive Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}" style="color: #f59e0b; font-weight: 850; letter-spacing: 0.1em; font-family: sans-serif; display: flex; align-items: center; gap: 8px;">
+    <span style="background: #f59e0b; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 14px;">GC</span>
+    GRANDCRUISE EXECUTIVE PANEL
+  </a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  /* Premium Dark / Gold overrides for Django Admin */
+  :root {
+    --primary: #111827;
+    --primary-fg: #f3f4f6;
+    --accent: #f59e0b;
+    --body-bg: #0b0f19;
+    --body-fg: #e2e8f0;
+    --border-color: #1f2937;
+    --darkened-bg: #111827;
+    --breadcrumbs-bg: #111827;
+    --breadcrumbs-link-fg: #9ca3af;
+    --breadcrumbs-active-fg: #f3f4f6;
+    --header-bg: #111827;
+    --header-color: #f59e0b;
+    --header-link-color: #9ca3af;
+    --button-bg: #f59e0b;
+    --button-hover-bg: #d97706;
+    --button-fg: #000000;
+  }
+  
+  body {
+    background-color: var(--body-bg) !important;
+    color: var(--body-fg) !important;
+  }
+  
+  #header {
+    background: var(--header-bg) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+  
+  #header a {
+    color: var(--header-link-color) !important;
+  }
+  
+  #header a:hover {
+    color: var(--accent) !important;
+  }
+  
+  .module {
+    background: var(--darkened-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+  }
+  
+  .module h2, .module caption {
+    background: #1f2937 !important;
+    color: var(--accent) !important;
+    font-weight: bold !important;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  div.breadcrumbs {
+    background: var(--breadcrumbs-bg) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    color: var(--breadcrumbs-link-fg) !important;
+  }
+  
+  div.breadcrumbs a {
+    color: var(--breadcrumbs-link-fg) !important;
+  }
+  
+  div.breadcrumbs a:hover {
+    color: var(--accent) !important;
+  }
+  
+  /* Tables */
+  table thead th {
+    background: #1f2937 !important;
+    color: var(--accent) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+  
+  tbody tr {
+    background-color: var(--body-bg) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+  
+  tbody tr:hover {
+    background-color: #1a2333 !important;
+  }
+  
+  /* Buttons */
+  .submit-row input, input[type=submit], input[type=button], .button {
+    background: var(--button-bg) !important;
+    color: var(--button-fg) !important;
+    border: none !important;
+    border-radius: 4px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+  }
+  
+  .submit-row input:hover, input[type=submit]:hover {
+    background: var(--button-hover-bg) !important;
+  }
+  
+  #content-main {
+    margin-top: 20px !important;
+  }
+  
+  /* Sidebar */
+  #content-related {
+    background: var(--darkened-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+  }
+  
+  /* Inputs */
+  input[type=text], input[type=password], textarea, select {
+    background-color: #0b0f19 !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--body-fg) !important;
+    border-radius: 4px !important;
+    padding: 6px !important;
+  }
+  
+  input[type=text]:focus, input[type=password]:focus, textarea:focus {
+    border-color: var(--accent) !important;
+    outline: none !important;
+  }
+</style>
+{% endblock %}
