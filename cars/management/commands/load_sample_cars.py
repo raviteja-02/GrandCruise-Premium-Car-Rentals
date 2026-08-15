@@ -1,8 +1,8 @@
 from django.core.management.base import BaseCommand
-from cars.models import Car
+from cars.models import Car, CarGallery
 
 class Command(BaseCommand):
-    help = 'Loads sample car data into the database'
+    help = 'Loads sample car data and gallery images into the database'
 
     def handle(self, *args, **kwargs):
         sample_cars = [
@@ -44,7 +44,7 @@ class Command(BaseCommand):
                 'price_per_day': 90.00,
                 'description': 'Luxury SUV with powerful performance and premium features.',
                 'is_available': True,
-                'image': 'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5-2023/10452/1688992642182/front-left-side-47.jpg?tr=w-230'
+                'image': 'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5-2023/10452/1688992642182/front-left-side-47.jpg?tr=w-664'
             },
             {
                 'brand': 'Mercedes-Benz',
@@ -88,12 +88,76 @@ class Command(BaseCommand):
             }
         ]
 
+        # Gallery mappings
+        galleries = {
+            'toyota camry': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Camry/11344/1733916451269/front-left-side-47.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Camry/11344/1733916451269/side-view-(left)-90.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Toyota/Camry/11344/1733916451269/rear-left-view-48.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carinteriorimages/630x420/Toyota/Camry/11344/1733916568285/dashboard-59.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carinteriorimages/630x420/Toyota/Camry/11344/1733916568285/steering-wheel-54.jpg?tr=w-664'
+            ],
+            'honda cr-v': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Honda/CR-V/7739/1585800250804/front-left-side-47.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Honda/CR-V/7739/1585800250804/side-view-(left)-90.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Honda/CR-V/7739/1585800250804/rear-left-view-48.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carinteriorimages/630x420/Honda/CR-V/7739/1585800318991/dashboard-59.jpg?tr=w-664'
+            ],
+            'tesla model 3': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Tesla/Model-3/5251/1693556345148/front-left-side-47.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Tesla/Model-3/5251/1693556345148/side-view-(left)-90.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Tesla/Model-3/5251/1693556345148/rear-left-view-48.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carinteriorimages/630x420/Tesla/Model-3/5251/1693556402482/dashboard-59.jpg?tr=w-664'
+            ],
+            'bmw x5': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5-2023/10452/1688992642182/front-left-side-47.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5-2023/10452/1688992642182/side-view-(left)-90.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5-2023/10452/1688992642182/rear-left-view-48.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carinteriorimages/630x420/BMW/X5-2023/10452/1688992694117/dashboard-59.jpg?tr=w-664'
+            ],
+            'mercedes-benz c-class': [
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Mercedes-Benz/C-Class/10858/Mercedes-Benz-C-Class-C-200/1720160050225/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Mercedes-Benz/C-Class/10858/Mercedes-Benz-C-Class-C-200/1720160050225/side-view-(left)-90.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Mercedes-Benz/C-Class/10858/Mercedes-Benz-C-Class-C-200/1720160050225/rear-left-view-48.jpg',
+                'https://stimg.cardekho.com/images/carinteriorimages/930x620/Mercedes-Benz/C-Class/10858/1720160098555/dashboard-59.jpg'
+            ],
+            'audi q5': [
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Audi/Q5/10556/1689594416925/front-left-side-47.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Audi/Q5/10556/1689594416925/side-view-(left)-90.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carexteriorimages/630x420/Audi/Q5/10556/1689594416925/rear-left-view-48.jpg?tr=w-664',
+                'https://stimg.cardekho.com/images/carinteriorimages/630x420/Audi/Q5/10556/1689594473855/dashboard-59.jpg?tr=w-664'
+            ],
+            'ford mustang': [
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang-2024/7939/1663750110692/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang-2024/7939/1663750110692/side-view-(left)-90.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Ford/Mustang-2024/7939/1663750110692/rear-left-view-48.jpg',
+                'https://stimg.cardekho.com/images/carinteriorimages/930x620/Ford/Mustang-2024/7939/1663750159483/dashboard-59.jpg'
+            ],
+            'hyundai tucson': [
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Hyundai/Tucson/10134/1694668706095/front-left-side-47.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Hyundai/Tucson/10134/1694668706095/side-view-(left)-90.jpg',
+                'https://stimg.cardekho.com/images/carexteriorimages/930x620/Hyundai/Tucson/10134/1694668706095/rear-left-view-48.jpg',
+                'https://stimg.cardekho.com/images/carinteriorimages/930x620/Hyundai/Tucson/10134/1694668748395/dashboard-59.jpg'
+            ]
+        }
+
         for car_data in sample_cars:
-            Car.objects.update_or_create(
+            car, created = Car.objects.update_or_create(
                 brand=car_data['brand'],
                 model=car_data['model'],
                 year=car_data['year'],
                 defaults=car_data
             )
+            
+            # Seed or update gallery for this car
+            car_name = f"{car.brand} {car.model}".strip().lower()
+            if car_name in galleries:
+                CarGallery.objects.update_or_create(
+                    car=car,
+                    defaults={
+                        'gallery_url': f"https://www.cardekho.com/carmodels/{car.brand}/{car.model}",
+                        'images': galleries[car_name]
+                    }
+                )
 
-        self.stdout.write(self.style.SUCCESS('Successfully loaded and updated sample car data with CarDekho images'))
+        self.stdout.write(self.style.SUCCESS('Successfully loaded and updated sample car data with high-res images and galleries'))

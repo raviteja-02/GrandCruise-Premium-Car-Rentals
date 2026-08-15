@@ -124,7 +124,7 @@ class Command(BaseCommand):
                 'fuelType': 'Hybrid',
                 'transmission': 'Automatic',
                 'price_per_day': 150,
-                'image': 'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5-2023/10452/1688992642182/front-left-side-47.jpg?tr=w-230',
+                'image': 'https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/X5-2023/10452/1688992642182/front-left-side-47.jpg?tr=w-664',
                 'features': [
                     'iDrive 8.0',
                     '14.9-inch Touchscreen',
