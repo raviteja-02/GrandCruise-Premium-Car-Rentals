@@ -95,10 +95,18 @@ except ImportError:
 
 # Fallback to SQLite in environments where MySQL is not configured or available
 if os.getenv('USE_SQLITE') == 'True' or not HAS_MYSQL or not os.getenv('DB_NAME'):
+    # Check if running on Render and a persistent disk (/data) is mounted
+    from pathlib import Path
+    db_path = BASE_DIR / 'db.sqlite3'
+    if os.getenv('RENDER') == 'true':
+        persistent_dir = Path('/data')
+        if persistent_dir.exists():
+            db_path = persistent_dir / 'db.sqlite3'
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': db_path,
         }
     }
 else:
